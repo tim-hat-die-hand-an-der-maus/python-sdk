@@ -1,0 +1,57 @@
+name: Workflow
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - v**
+  pull_request: { }
+
+jobs:
+  lint:
+    strategy:
+      matrix:
+        pyversion: [ "3.11" ]
+    container: python:${{ matrix.pyversion }}-slim
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Poetry
+        run: pip install poetry==1.6.1
+      - uses: actions/checkout@v3
+      - run: poetry install
+      - name: Check coding standards
+        run: |
+          poetry run black --check timhatdiehandandermaus_sdk/
+
+  test:
+    strategy:
+      matrix:
+        pyversion: [ "3.11" ]
+    container: python:${{ matrix.pyversion }}-slim
+    runs-on: ubuntu-latest
+    steps:
+      - name: Install Poetry
+        run: pip install poetry==1.6.1
+      - uses: actions/checkout@v3
+      - run: poetry install
+      - name: Run tests
+        run: poetry run pytest tests/
+
+  publish_package:
+    runs-on: ubuntu-latest
+    container: python:3.11-slim
+    needs:
+      - lint
+      - test
+    if: success() && startsWith(github.ref_name, 'v')
+    env:
+      POETRY_HTTP_BASIC_PYPI_TIM_PYTHON_SDK_USERNAME: timhatdiehandandermaus-sdk
+      POETRY_HTTP_BASIC_PYPI_TIM_PYTHON_SDK_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
+    steps:
+      - name: Install Poetry
+        run: pip install poetry==1.6.1
+      - uses: actions/checkout@v3
+      - run: poetry install
+      - name: Build project
+        run: poetry build
+      - name: Upload to pypi registry
+        run: poetry publish -r pypi-blindfoldedsurgery

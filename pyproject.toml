@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "timhatdiehandandermaus-sdk"
+version = "0.1.0"
+description = ""
+authors = ["BlindfoldedSurgery <git@blindfolded.surgery>"]
+readme = "README.md"
+packages = [{ include = "timhatdiehandandermaus_sdk" }]
+
+[projects.urls]
+repository = "https://github.com/tim-hat-die-hand-an-der-maus/python-sdk"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+httpx = "^0.24.1"
+pydantic = "^2.2.1"
+
+[tool.poetry.group.dev.dependencies]
+black = "^23.0.0"
+pytest = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
