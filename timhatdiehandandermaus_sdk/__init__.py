@@ -109,7 +109,7 @@ class TimApi:
     def get_movie(self, *, movie_id: str) -> MovieResponse:
         """
         Gets a movie by id
-        See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/get_movie
+        See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/get_movie__id_
         :param movie_id: string with a movie ID
         :return: MovieResponse
         """
