@@ -32,7 +32,7 @@ class MissingToken(Exception):
 class TimApi:
     base_url = "https://api.timhatdiehandandermaus.consulting"
 
-    def __init__(self, auth_token: str):
+    def __init__(self, auth_token: str = None):
         self.token = auth_token
 
     def request(
