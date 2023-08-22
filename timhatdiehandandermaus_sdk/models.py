@@ -20,6 +20,12 @@ class MovieStatusResponseEnum(Enum):
     DELETED = "Deleted"
 
 
+class MovieStatusSearchRequestEnum(Enum):
+    QUEUED = "Queued"
+    WATCHED = "Watched"
+    DELETED = "Deleted"
+
+
 class MovieMetadataResponse(BaseModel):
     id: str
     title: str
