@@ -3,6 +3,8 @@ from typing import Optional
 
 from pydantic import BaseModel
 
+from utils import escape_markdown
+
 
 class MovieMetadataFieldEnum(Enum):
     COVER = "cover"
@@ -39,6 +41,13 @@ class MovieResponse(BaseModel):
     status: MovieStatusResponseEnum
     imdb: MovieMetadataResponse
 
+    def telegram_markdown_v2(self) -> str:
+        imdb_link = f"https://www.imdb.com/title/tt{self.imdb.id}"
+        title_link = f"[{escape_markdown(self.imdb.title)}]({imdb_link})"
+
+        year_rating_suffix = escape_markdown(f"({self.imdb.year}) {self.imdb.rating}⭐")
+        return f"{title_link} {year_rating_suffix}"
+
 
 class MoviesResponse(BaseModel):
     movies: list[MovieResponse]
@@ -63,7 +72,3 @@ class MoviePostRequest(BaseModel):
 
 class MovieMetadataPatchRequest(BaseModel):
     refresh: list[MovieMetadataFieldEnum]
-
-
-class MovieDeleteRequest(BaseModel):
-    status: MovieDeleteStatusEnum
