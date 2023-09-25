@@ -1,4 +1,5 @@
 from enum import Enum
+from urllib.parse import urljoin
 
 import httpx
 from httpx import Response
@@ -55,7 +56,7 @@ class TimApi:
 
         if headers:
             _headers.update(headers)
-        url = "/".join([self.base_url.rstrip("/"), path.lstrip("/")])
+        url = urljoin(self.base_url, path)
 
         response = httpx.request(
             method=method.value,
