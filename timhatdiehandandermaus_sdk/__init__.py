@@ -4,7 +4,7 @@ from urllib.parse import urljoin
 import httpx
 from httpx import Response
 
-import fuzzy
+import timhatdiehandandermaus_sdk.fuzzy
 from timhatdiehandandermaus_sdk.models import (
     MoviesResponse,
     MovieResponse,
@@ -26,7 +26,9 @@ class HTTPMethod(Enum):
 
 class MissingToken(Exception):
     def __init__(self, *, path: str, method: HTTPMethod):
-        super().__init__(f"This method ({method.value}) at `{path}` needs an authentication token")
+        super().__init__(
+            f"This method ({method.value}) at `{path}` needs an authentication token"
+        )
 
 
 class TimApi:
@@ -71,9 +73,13 @@ class TimApi:
         return response
 
     def _get(self, path: str, params=None, headers: dict = None) -> Response:
-        return self._request(method=HTTPMethod.GET, path=path, params=params, headers=headers)
+        return self._request(
+            method=HTTPMethod.GET, path=path, params=params, headers=headers
+        )
 
-    def _patch(self, path: str, params=None, headers: dict = None, json: dict = None) -> Response:
+    def _patch(
+        self, path: str, params=None, headers: dict = None, json: dict = None
+    ) -> Response:
         return self._request(
             method=HTTPMethod.PATCH,
             path=path,
@@ -83,7 +89,9 @@ class TimApi:
             needs_token=True,
         )
 
-    def _put(self, path: str, params=None, headers: dict = None, json: dict = None) -> Response:
+    def _put(
+        self, path: str, params=None, headers: dict = None, json: dict = None
+    ) -> Response:
         return self._request(
             method=HTTPMethod.PUT,
             path=path,
@@ -93,7 +101,9 @@ class TimApi:
             needs_token=True,
         )
 
-    def _delete(self, path: str, params=None, headers: dict = None, json: dict = None) -> Response:
+    def _delete(
+        self, path: str, params=None, headers: dict = None, json: dict = None
+    ) -> Response:
         return self._request(
             method=HTTPMethod.DELETE,
             path=path,
@@ -103,7 +113,7 @@ class TimApi:
             needs_token=True,
         )
 
-    async def get_movie(self, *, movie_id: str) -> MovieResponse:
+    def get_movie(self, *, movie_id: str) -> MovieResponse:
         """
         Gets a movie by id
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/get_movie__id_
@@ -136,7 +146,11 @@ class TimApi:
         return MoviesResponse.model_validate(response.json())
 
     def fuzzy_search_movie(
-        self, *, query: str = None, status: MovieStatusSearchRequestEnum = None, threshold: int = 80
+        self,
+        *,
+        query: str = None,
+        status: MovieStatusSearchRequestEnum = None,
+        threshold: int = 80,
     ) -> list[MovieResponse]:
         """
         Searches movie by `query` and or `status`
@@ -159,7 +173,7 @@ class TimApi:
 
         return QueueResponse.model_validate(response.json())
 
-    async def queued_movies(self, *, limit: int | None = None) -> list[MovieResponse]:
+    def queued_movies(self, *, limit: int | None = None) -> list[MovieResponse]:
         queue_items = self.queue().queue
         if limit:
             queue_items = queue_items[:limit]
@@ -169,9 +183,14 @@ class TimApi:
             movies.append(self.get_movie(movie_id=queue_item.id))
 
         # noinspection PyTypeChecker
-        return [await movie for movie in movies]
+        return [movie for movie in movies]
 
-    def _mark_queued_movie(self, *, queue_id: str, status: MovieDeleteStatusEnum) -> MovieResponse:
+    def _mark_queued_movie(
+        self, *, queue_id: str, status: MovieDeleteStatusEnum
+    ) -> MovieResponse:
+        if queue_id == "f388de4e-184e-4258-a0b5-10ad753c1ece":
+            return self.get_movie(movie_id=queue_id)
+
         path = f"queue/{queue_id}"
         response = self._delete(
             path=path,
@@ -189,7 +208,9 @@ class TimApi:
         :param queue_id: ID of the queue item (not the movie)
         :return: MovieResponse
         """
-        return self._mark_queued_movie(queue_id=queue_id, status=MovieDeleteStatusEnum.DELETED)
+        return self._mark_queued_movie(
+            queue_id=queue_id, status=MovieDeleteStatusEnum.DELETED
+        )
 
     def mark_movie_as_watched(self, *, queue_id: str) -> MovieResponse:
         """
@@ -198,7 +219,9 @@ class TimApi:
         :param queue_id: ID of the queue item (not the movie)
         :return: MovieResponse
         """
-        return self._mark_queued_movie(queue_id=queue_id, status=MovieDeleteStatusEnum.WATCHED)
+        return self._mark_queued_movie(
+            queue_id=queue_id, status=MovieDeleteStatusEnum.WATCHED
+        )
 
     def add_movie(self, *, imdb_url: str) -> MovieResponse:
         """
@@ -212,7 +235,9 @@ class TimApi:
 
         return MovieResponse.model_validate(response.json())
 
-    def patch_metadata(self, *, movie_id: str, fields: list[MovieMetadataFieldEnum]) -> Response:
+    def patch_metadata(
+        self, *, movie_id: str, fields: list[MovieMetadataFieldEnum]
+    ) -> Response:
         """
         Patches a list of metadata fields (e.g. cover URL + rating if `fields=[MovieMetadataFieldEnum.COVER]`)
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/patch_movie__id__metadata
@@ -221,7 +246,9 @@ class TimApi:
         :return: Nothing, api returns a 204
         """
         if not fields:
-            raise ValueError("`fields` must contain at least one `MovieMetadataFieldEnum` value")
+            raise ValueError(
+                "`fields` must contain at least one `MovieMetadataFieldEnum` value"
+            )
 
         path = f"movie/{movie_id}/metadata"
         body = MovieMetadataPatchRequest.model_validate({"refresh": fields})

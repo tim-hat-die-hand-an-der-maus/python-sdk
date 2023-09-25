@@ -3,7 +3,10 @@ from typing import Optional
 
 from pydantic import BaseModel
 
-from utils import escape_markdown
+from timhatdiehandandermaus_sdk.utils import escape_markdown
+
+
+# see https://api.timhatdiehandandermaus.consulting/docs/swagger/ for api models
 
 
 class MovieMetadataFieldEnum(Enum):
