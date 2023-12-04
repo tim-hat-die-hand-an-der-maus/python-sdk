@@ -242,7 +242,7 @@ class TimApi:
         :param imdb_url: Valid imdb url or imdb ID (see https://github.com/tim-hat-die-hand-an-der-maus/imdb-resolver)
         :return: MovieResponse
         """
-        body = MoviePostRequest.model_validate({"imbdUrl": imdb_url})
+        body = MoviePostRequest.model_validate({"imdbUrl": imdb_url})
         response = self._put(path="movie", json=body.model_dump())
 
         return MovieResponse.model_validate(response.json())

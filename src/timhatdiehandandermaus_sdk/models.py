@@ -69,7 +69,7 @@ class MovieDeleteStatusEnum(Enum):
 
 
 class MoviePostRequest(BaseModel):
-    imbdUrl: str
+    imdbUrl: str
 
 
 class MovieMetadataPatchRequest(BaseModel):
