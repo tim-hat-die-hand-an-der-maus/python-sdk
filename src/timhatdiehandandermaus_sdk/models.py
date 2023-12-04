@@ -5,7 +5,6 @@ from pydantic import BaseModel
 
 from timhatdiehandandermaus_sdk.utils import escape_markdown
 
-
 # see https://api.timhatdiehandandermaus.consulting/docs/swagger/ for api models
 
 

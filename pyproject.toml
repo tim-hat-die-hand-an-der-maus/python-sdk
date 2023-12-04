@@ -1,10 +1,9 @@
 [tool.poetry]
 name = "timhatdiehandandermaus-sdk"
 version = "0.1.0"
-description = ""
+description = "sdk for the timhatdiehandandermaus api"
 authors = ["BlindfoldedSurgery <git@blindfolded.surgery>"]
 readme = "README.md"
-packages = [{ include = "timhatdiehandandermaus_sdk" }]
 
 [projects.urls]
 repository = "https://github.com/tim-hat-die-hand-an-der-maus/python-sdk"
@@ -17,8 +16,22 @@ thefuzz = "^0.20.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.0.0"
+mypy = "^1.4.0"
 pytest = "^7.1.2"
+ruff = "0.1.6"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.ruff]
+extend-select = [
+    "I001",
+]
+
+[tool.ruff.isort]
+known-first-party = ["timhatdiehandandermaus_sdk"]
+
+[[tool.mypy.overrides]]
+module = "thefuzz"
+ignore_missing_imports = true

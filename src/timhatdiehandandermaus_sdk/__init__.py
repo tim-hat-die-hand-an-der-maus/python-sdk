@@ -5,16 +5,16 @@ from urllib.parse import urljoin
 import httpx
 from httpx import Response
 
-import timhatdiehandandermaus_sdk.fuzzy
+from timhatdiehandandermaus_sdk import fuzzy
 from timhatdiehandandermaus_sdk.models import (
-    MoviesResponse,
-    MovieResponse,
-    QueueResponse,
     MovieDeleteStatusEnum,
     MovieMetadataFieldEnum,
-    MoviePostRequest,
     MovieMetadataPatchRequest,
+    MoviePostRequest,
+    MovieResponse,
+    MoviesResponse,
     MovieStatusSearchRequestEnum,
+    QueueResponse,
 )
 
 
@@ -35,7 +35,7 @@ class MissingToken(Exception):
 class TimApi:
     base_url = os.getenv("API_URL") or "https://api.timhatdiehandandermaus.consulting"
 
-    def __init__(self, auth_token: str = None):
+    def __init__(self, auth_token: str | None = None):
         self.token = auth_token
 
     def _request(
@@ -44,8 +44,8 @@ class TimApi:
         method: HTTPMethod,
         path: str,
         params=None,
-        headers: dict = None,
-        json: dict = None,
+        headers: dict | None = None,
+        json: dict | None = None,
         needs_token: bool = False,
         timeout: int = 30,
     ) -> Response:
@@ -74,13 +74,17 @@ class TimApi:
 
         return response
 
-    def _get(self, path: str, params=None, headers: dict = None) -> Response:
+    def _get(self, path: str, params=None, headers: dict | None = None) -> Response:
         return self._request(
             method=HTTPMethod.GET, path=path, params=params, headers=headers
         )
 
     def _patch(
-        self, path: str, params=None, headers: dict = None, json: dict = None
+        self,
+        path: str,
+        params=None,
+        headers: dict | None = None,
+        json: dict | None = None,
     ) -> Response:
         return self._request(
             method=HTTPMethod.PATCH,
@@ -92,7 +96,11 @@ class TimApi:
         )
 
     def _put(
-        self, path: str, params=None, headers: dict = None, json: dict = None
+        self,
+        path: str,
+        params=None,
+        headers: dict | None = None,
+        json: dict | None = None,
     ) -> Response:
         return self._request(
             method=HTTPMethod.PUT,
@@ -103,7 +111,7 @@ class TimApi:
             needs_token=True,
         )
 
-    def _delete(self, path: str, params=None, headers: dict = None) -> Response:
+    def _delete(self, path: str, params=None, headers: dict | None = None) -> Response:
         return self._request(
             method=HTTPMethod.DELETE,
             path=path,
@@ -125,7 +133,10 @@ class TimApi:
         return MovieResponse.model_validate(response.json())
 
     def search_movie(
-        self, *, query: str = None, status: MovieStatusSearchRequestEnum = None
+        self,
+        *,
+        query: str | None = None,
+        status: MovieStatusSearchRequestEnum | None = None,
     ) -> MoviesResponse:
         """
         Searches movie by `query` and or `status`
@@ -147,8 +158,8 @@ class TimApi:
     def fuzzy_search_movie(
         self,
         *,
-        query: str = None,
-        status: MovieStatusSearchRequestEnum = None,
+        query: str | None = None,
+        status: MovieStatusSearchRequestEnum | None = None,
         threshold: int = 80,
     ) -> list[MovieResponse]:
         """
@@ -160,7 +171,9 @@ class TimApi:
         :return: MoviesResponse
         """
         movies = self.search_movie(query=query, status=status).movies
-        return fuzzy.fuzzy_search_movie(movies, title=query, threshold=threshold)
+        title = "" if query is None else query
+
+        return fuzzy.fuzzy_search_movie(movies, title=title, threshold=threshold)
 
     def queue(self) -> QueueResponse:
         """
