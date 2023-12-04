@@ -16,7 +16,7 @@ jobs:
     steps:
       - name: Install Poetry
         run: pip install poetry==1.6.1
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: poetry install
       - name: Check coding standards
         run: |
@@ -31,7 +31,7 @@ jobs:
     steps:
       - name: Install Poetry
         run: pip install poetry==1.6.1
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: poetry install
       - name: Run tests
         run: poetry run pytest tests/
@@ -49,7 +49,7 @@ jobs:
     steps:
       - name: Install Poetry
         run: pip install poetry==1.6.1
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - run: poetry install
       - name: Build project
         run: poetry build
