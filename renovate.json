@@ -2,24 +2,5 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": [
     "github>tim-hat-die-hand-an-der-maus/renovate-config"
-  ],
-  "separateMultipleMajor": true,
-  "packageRules": [
-    {
-      "groupName": "Kotlin",
-      "matchPackagePrefixes": [
-        "org.jetbrains.kotlin"
-      ],
-      "matchManagers": [
-        "gradle"
-      ],
-      "allowedVersions": "< 1.8.0"
-    },
-    {
-      "matchPackagePrefixes": [
-        "io.quarkus"
-      ],
-      "separateMinorPatch": true
-    }
   ]
 }
