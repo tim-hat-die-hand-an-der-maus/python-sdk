@@ -65,8 +65,8 @@ class TimApi:
             method=method.value,
             url=url,
             params=params,
+            headers=_headers,
             json=json,
-            headers=headers,
             timeout=timeout,
         )
         response.raise_for_status()
