@@ -1,3 +1,4 @@
+import os
 from enum import Enum
 from urllib.parse import urljoin
 
@@ -32,7 +33,7 @@ class MissingToken(Exception):
 
 
 class TimApi:
-    base_url = "https://api.timhatdiehandandermaus.consulting"
+    base_url = os.getenv("API_URL") or "https://api.timhatdiehandandermaus.consulting"
 
     def __init__(self, auth_token: str = None):
         self.token = auth_token
