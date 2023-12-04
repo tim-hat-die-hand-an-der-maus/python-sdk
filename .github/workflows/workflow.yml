@@ -44,7 +44,7 @@ jobs:
       - test
     if: success() && startsWith(github.ref_name, 'v')
     env:
-      POETRY_HTTP_BASIC_PYPI_TIM_PYTHON_SDK_USERNAME: timhatdiehandandermaus-sdk
+      POETRY_HTTP_BASIC_PYPI_TIM_PYTHON_SDK_USERNAME: ${{ vars.PYPI_USERNAME }}
       POETRY_HTTP_BASIC_PYPI_TIM_PYTHON_SDK_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
     steps:
       - name: Install Poetry
