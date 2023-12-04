@@ -103,15 +103,12 @@ class TimApi:
             needs_token=True,
         )
 
-    def _delete(
-        self, path: str, params=None, headers: dict = None, json: dict = None
-    ) -> Response:
+    def _delete(self, path: str, params=None, headers: dict = None) -> Response:
         return self._request(
             method=HTTPMethod.DELETE,
             path=path,
             params=params,
             headers=headers,
-            json=json,
             needs_token=True,
         )
 
