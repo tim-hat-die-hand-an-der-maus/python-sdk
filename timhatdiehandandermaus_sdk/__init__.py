@@ -50,7 +50,7 @@ class TimApi:
         timeout: int = 30,
     ) -> Response:
         _headers = {"Accept": "application/json"}
-        if method != HTTPMethod.GET:
+        if method not in [HTTPMethod.GET, HTTPMethod.DELETE]:
             _headers["Content-Type"] = "application/json"
         if needs_token:
             if not self.token:
