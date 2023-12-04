@@ -11,8 +11,8 @@ repository = "https://github.com/tim-hat-die-hand-an-der-maus/python-sdk"
 
 [tool.poetry.dependencies]
 python = "^3.11"
-httpx = "^0.24.1"
-pydantic = "^2.2.1"
+httpx = "^0.25.2"
+pydantic = "^2.5.2"
 thefuzz = "^0.20.0"
 
 [tool.poetry.group.dev.dependencies]
