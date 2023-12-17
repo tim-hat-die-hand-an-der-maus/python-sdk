@@ -19,15 +19,9 @@ jobs:
     strategy:
       matrix:
         pyversion: [ "3.11", "3.12" ]
-    container: python:${{ matrix.pyversion }}-slim
-    runs-on: ubuntu-latest
-    steps:
-      - name: Install Poetry
-        run: pip install poetry==1.7.1
-      - uses: actions/checkout@v4
-      - run: poetry install
-      - name: Run tests
-        run: poetry run pytest tests/
+    uses: BlindfoldedSurgery/actions-python/.github/workflows/test.yml@v1
+    with:
+      python-version: ${{ matrix.pyversion }}
 
   publish_package:
     uses: BlindfoldedSurgery/actions-python/.github/workflows/publish-package.yml@v1
