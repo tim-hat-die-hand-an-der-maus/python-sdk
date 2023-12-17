@@ -1,6 +1,4 @@
 import os
-from enum import Enum
-from urllib.parse import urljoin
 
 import httpx
 from httpx import Response
@@ -18,107 +16,32 @@ from timhatdiehandandermaus_sdk.models import (
 )
 
 
-class HTTPMethod(Enum):
-    GET = "GET"
-    PUT = "PUT"
-    PATCH = "PATCH"
-    DELETE = "DELETE"
-
-
 class MissingToken(Exception):
-    def __init__(self, *, path: str, method: HTTPMethod):
-        super().__init__(
-            f"This method ({method.value}) at `{path}` needs an authentication token"
-        )
+    def __init__(self):
+        super().__init__("This method needs an authentication token.")
 
 
 class TimApi:
     base_url = os.getenv("API_URL") or "https://api.timhatdiehandandermaus.consulting"
 
     def __init__(self, auth_token: str | None = None):
+        self._client = httpx.Client(
+            timeout=30,
+            follow_redirects=True,
+            base_url=self.base_url,
+        )
+        if auth_token:
+            self._client.headers["Authorization"] = f"Bearer {auth_token}"
+
         self.token = auth_token
 
-    def _request(
-        self,
-        *,
-        method: HTTPMethod,
-        path: str,
-        params=None,
-        headers: dict | None = None,
-        json: dict | None = None,
-        needs_token: bool = False,
-        timeout: int = 30,
-    ) -> Response:
-        _headers = {"Accept": "application/json"}
-        if method not in [HTTPMethod.GET, HTTPMethod.DELETE]:
-            _headers["Content-Type"] = "application/json"
-        if needs_token:
-            if not self.token:
-                raise MissingToken(path=path, method=method)
-            _headers["Authorization"] = f"Bearer {self.token}"
+    @property
+    def has_token(self):
+        return bool(self.token)
 
-        if headers:
-            _headers.update(headers)
-        url = urljoin(self.base_url, path)
-
-        response = httpx.request(
-            method=method.value,
-            url=url,
-            params=params,
-            headers=_headers,
-            json=json,
-            timeout=timeout,
-            follow_redirects=True,
-        )
-        response.raise_for_status()
-
-        return response
-
-    def _get(self, path: str, params=None, headers: dict | None = None) -> Response:
-        return self._request(
-            method=HTTPMethod.GET, path=path, params=params, headers=headers
-        )
-
-    def _patch(
-        self,
-        path: str,
-        params=None,
-        headers: dict | None = None,
-        json: dict | None = None,
-    ) -> Response:
-        return self._request(
-            method=HTTPMethod.PATCH,
-            path=path,
-            params=params,
-            headers=headers,
-            json=json,
-            needs_token=True,
-        )
-
-    def _put(
-        self,
-        path: str,
-        params=None,
-        headers: dict | None = None,
-        json: dict | None = None,
-    ) -> Response:
-        return self._request(
-            method=HTTPMethod.PUT,
-            path=path,
-            params=params,
-            headers=headers,
-            json=json,
-            needs_token=True,
-        )
-
-    def _delete(self, path: str, params=None, headers: dict | None = None) -> Response:
-        return self._request(
-            method=HTTPMethod.DELETE,
-            path=path,
-            params=params,
-            headers=headers,
-            needs_token=True,
-        )
+    def _check_token(self) -> None:
+        if not self.has_token:
+            raise MissingToken()
 
     def get_movie(self, *, movie_id: str) -> MovieResponse:
         """
@@ -128,7 +51,7 @@ class TimApi:
         :return: MovieResponse
         """
         path = f"movie/{movie_id}"
-        response = self._get(path=path)
+        response = self._client.get(path)
 
         return MovieResponse.model_validate(response.json())
 
@@ -151,7 +74,7 @@ class TimApi:
         if status:
             params["status"] = status.value
 
-        response = self._get(path="movie", params=params)
+        response = self._client.get("movie", params=params)
 
         return MoviesResponse.model_validate(response.json())
 
@@ -181,7 +104,7 @@ class TimApi:
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Queue%20Resource/get_queue
         :return: QueueResponse
         """
-        response = self._get(path="queue")
+        response = self._client.get("queue")
 
         return QueueResponse.model_validate(response.json())
 
@@ -203,9 +126,11 @@ class TimApi:
         if queue_id == "f388de4e-184e-4258-a0b5-10ad753c1ece":
             return self.get_movie(movie_id=queue_id)
 
+        self._check_token()
+
         path = f"queue/{queue_id}"
-        response = self._delete(
-            path=path,
+        response = self._client.delete(
+            path,
             params={
                 "status": status.value,
             },
@@ -242,8 +167,10 @@ class TimApi:
         :param imdb_url: Valid imdb url or imdb ID (see https://github.com/tim-hat-die-hand-an-der-maus/imdb-resolver)
         :return: MovieResponse
         """
+        self._check_token()
+
         body = MoviePostRequest.model_validate({"imdbUrl": imdb_url})
-        response = self._put(path="movie", json=body.model_dump())
+        response = self._client.put("movie", json=body.model_dump())
 
         return MovieResponse.model_validate(response.json())
 
@@ -262,7 +189,8 @@ class TimApi:
                 "`fields` must contain at least one `MovieMetadataFieldEnum` value"
             )
 
+        self._check_token()
+
         path = f"movie/{movie_id}/metadata"
         body = MovieMetadataPatchRequest.model_validate({"refresh": fields})
-
-        return self._patch(path=path, json=body.model_dump())
+        return self._client.patch(path, json=body.model_dump())
