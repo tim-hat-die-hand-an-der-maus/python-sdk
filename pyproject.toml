@@ -4,6 +4,8 @@ version = "0.1.1"
 description = "sdk for the timhatdiehandandermaus api"
 authors = ["BlindfoldedSurgery <git@blindfolded.surgery>"]
 readme = "README.md"
+license = "MIT"
+packages = [{ include = "timhatdiehandandermaus_sdk", from = "src" }]
 
 [projects.urls]
 repository = "https://github.com/tim-hat-die-hand-an-der-maus/python-sdk"
