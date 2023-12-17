@@ -33,11 +33,11 @@ class TimApi:
         if auth_token:
             self._client.headers["Authorization"] = f"Bearer {auth_token}"
 
-        self.token = auth_token
+        self._token = auth_token
 
     @property
     def has_token(self):
-        return bool(self.token)
+        return bool(self._token)
 
     def _check_token(self) -> None:
         if not self.has_token:
