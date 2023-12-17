@@ -11,7 +11,7 @@ packages = [{ include = "timhatdiehandandermaus_sdk", from = "src" }]
 repository = "https://github.com/tim-hat-die-hand-an-der-maus/python-sdk"
 
 [tool.poetry.dependencies]
-python = "^3.11"
+python = ">=3.11 <3.13"
 httpx = "^0.25.2"
 pydantic = "^2.5.2"
 thefuzz = "^0.20.0"
