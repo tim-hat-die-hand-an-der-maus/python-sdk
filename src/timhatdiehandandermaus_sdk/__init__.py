@@ -52,6 +52,7 @@ class TimApi:
         """
         path = f"movie/{movie_id}"
         response = self._client.get(path)
+        response.raise_for_status()
 
         return MovieResponse.model_validate(response.json())
 
@@ -75,6 +76,7 @@ class TimApi:
             params["status"] = status.value
 
         response = self._client.get("movie", params=params)
+        response.raise_for_status()
 
         return MoviesResponse.model_validate(response.json())
 
@@ -105,6 +107,7 @@ class TimApi:
         :return: QueueResponse
         """
         response = self._client.get("queue")
+        response.raise_for_status()
 
         return QueueResponse.model_validate(response.json())
 
@@ -135,6 +138,7 @@ class TimApi:
                 "status": status.value,
             },
         )
+        response.raise_for_status()
 
         return MovieResponse.model_validate(response.json())
 
@@ -171,6 +175,7 @@ class TimApi:
 
         body = MoviePostRequest.model_validate({"imdbUrl": imdb_url})
         response = self._client.put("movie", json=body.model_dump())
+        response.raise_for_status()
 
         return MovieResponse.model_validate(response.json())
 
@@ -193,4 +198,6 @@ class TimApi:
 
         path = f"movie/{movie_id}/metadata"
         body = MovieMetadataPatchRequest.model_validate({"refresh": fields})
-        return self._client.patch(path, json=body.model_dump())
+        response = self._client.patch(path, json=body.model_dump())
+        response.raise_for_status()
+        return response
