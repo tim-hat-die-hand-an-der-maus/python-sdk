@@ -1,3 +1,9 @@
+## v2.0.2 (2023-12-17)
+
+### Fix
+
+- **#20**: raise HTTP errors for unsuccessful responses
+
 ## v2.0.1 (2023-12-17)
 
 ### Fix
