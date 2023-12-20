@@ -1,3 +1,9 @@
+## v2.0.3 (2023-12-20)
+
+### Fix
+
+- **deps**: update dependency httpx to ^0.26.0
+
 ## v2.0.2 (2023-12-17)
 
 ### Fix
