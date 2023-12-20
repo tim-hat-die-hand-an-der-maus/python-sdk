@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "timhatdiehandandermaus-sdk"
-version = "2.0.2"
+version = "2.0.3"
 description = "SDK for the timhatdiehandandermaus API"
 authors = ["BlindfoldedSurgery <team@blindfolded.surgery>"]
 readme = "README.md"
