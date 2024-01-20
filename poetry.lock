@@ -1050,13 +1050,13 @@ tests = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "thefuzz"
-version = "0.20.0"
+version = "0.22.1"
 description = "Fuzzy string matching in python"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "thefuzz-0.20.0-py3-none-any.whl", hash = "sha256:bd2b657a12bd8518917d2d71c53125368706233b822fac688fca956730154388"},
-    {file = "thefuzz-0.20.0.tar.gz", hash = "sha256:a25e49786b1c4603c7fc6e2d69e6bc660982a2919698b536ff8354e0631cc40d"},
+    {file = "thefuzz-0.22.1-py3-none-any.whl", hash = "sha256:59729b33556850b90e1093c4cf9e618af6f2e4c985df193fdf3c5b5cf02ca481"},
+    {file = "thefuzz-0.22.1.tar.gz", hash = "sha256:7138039a7ecf540da323792d8592ef9902b1d79eb78c147d4f20664de79f3680"},
 ]
 
 [package.dependencies]
@@ -1133,4 +1133,4 @@ testing = ["big-O", "jaraco.functools", "jaraco.itertools", "more-itertools", "p
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.11 <3.13"
-content-hash = "c2286119578c9d27ebbf8bb737b89c470af60c0e6b9c26beecb9384f9c5f4a97"
+content-hash = "68a35536bd1ca044ddc2f2e7787c456f62038ff6361e0f5e5af55a94fc07a8e7"
