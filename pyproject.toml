@@ -14,7 +14,7 @@ repository = "https://github.com/tim-hat-die-hand-an-der-maus/python-sdk"
 python = ">=3.11 <3.13"
 httpx = "^0.26.0"
 pydantic = "^2.5.2"
-thefuzz = "^0.20.0"
+thefuzz = "^0.22.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^23.0.0"
