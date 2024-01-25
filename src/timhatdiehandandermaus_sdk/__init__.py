@@ -61,12 +61,14 @@ class TimApi:
         *,
         query: str | None = None,
         status: MovieStatusSearchRequestEnum | None = None,
+        year: int | None = None,
     ) -> list[MovieResponse]:
         """
         Searches movie by `query` and or `status`
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/get_movie
         :param query: queries movies by name (fuzzy search), no value will return all movies (except for status filter)
         :param status: returns movies with given status only
+        :param year: returns movies with given year only
         :return: list[MovieResponse]
         """
         params = {}
@@ -78,13 +80,18 @@ class TimApi:
         response = self._client.get("movie", params=params)
         response.raise_for_status()
 
-        return MoviesResponse.model_validate(response.json()).movies
+        results = MoviesResponse.model_validate(response.json()).movies
+        if year is not None:
+            results = [movie for movie in results if movie.imdb.year == year]
+
+        return results
 
     def fuzzy_search_movie(
         self,
         *,
         query: str | None = None,
         status: MovieStatusSearchRequestEnum | None = None,
+        year: int | None = None,
         threshold: int = 80,
     ) -> list[MovieResponse]:
         """
@@ -92,13 +99,19 @@ class TimApi:
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/get_movie
         :param query: queries movies by name (fuzzy search), no value will return all movies (except for status filter)
         :param status: returns movies with given status only
+        :param year: returns movies with given year only
         :param threshold: threshold for the fuzzy search to match on
         :return: list[MovieResponse]
         """
-        movies = self.search_movie(query=query, status=status)
-        title = "" if query is None else query
+        results = self.search_movie(query=query, year=year, status=status)
+        query = "" if query is None else query
 
-        return fuzzy.fuzzy_search_movie(movies, title=title, threshold=threshold)
+        if query is not None:
+            results = fuzzy.fuzzy_search_movie(
+                results, title=query, threshold=threshold
+            )
+
+        return results
 
     def queue(self) -> QueueResponse:
         """
