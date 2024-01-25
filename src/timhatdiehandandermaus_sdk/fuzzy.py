@@ -8,10 +8,10 @@ def fuzzy_search_movie(
 ) -> list[models.MovieResponse]:
     matches = []
     for movie in movies:
-        if (
-            fuzz.token_set_ratio(title, movie.imdb.title) > threshold
-            or title.lower() in movie.imdb.title.lower()
-        ):
-            matches.append(movie)
+        ratio = fuzz.token_sort_ratio(title, movie.imdb.title)
 
-    return matches
+        if ratio > threshold:
+            matches.append((movie, ratio))
+
+    sorted_matches = sorted(matches, key=lambda x: x[1], reverse=True)
+    return [match for match, _ in sorted_matches]
