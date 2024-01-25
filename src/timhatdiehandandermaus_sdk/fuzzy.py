@@ -5,7 +5,7 @@ from timhatdiehandandermaus_sdk import models
 
 def fuzzy_search_movie(
     movies: list[models.MovieResponse], title: str, *, threshold: int
-):
+) -> list[models.MovieResponse]:
     matches = []
     for movie in movies:
         if (
