@@ -1,3 +1,9 @@
+## v2.0.4 (2024-01-25)
+
+### Fix
+
+- **deps**: update dependency thefuzz to ^0.22.0
+
 ## v2.0.3 (2023-12-20)
 
 ### Fix
