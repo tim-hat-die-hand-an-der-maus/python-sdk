@@ -48,7 +48,6 @@ jobs:
 
   bump:
     uses: BlindfoldedSurgery/actions-releases/.github/workflows/commitizen-bump.yml@v4
-    if: false
     needs:
       - lint
       - test
