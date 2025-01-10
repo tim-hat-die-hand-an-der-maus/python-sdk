@@ -38,9 +38,6 @@ jobs:
       build-tool: poetry
       build-tool-version: "1.8.4"
       python-version: ${{ matrix.pyversion }}
-      submit-coverage: ${{ matrix.pyversion == '3.11' }}
-    secrets:
-      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
   all-checks:
     runs-on: ubuntu-24.04
