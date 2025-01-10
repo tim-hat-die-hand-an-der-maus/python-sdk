@@ -4,6 +4,7 @@
     "github>tim-hat-die-hand-an-der-maus/renovate-config",
     ":semanticCommits"
   ],
+  "enabled": true,
   "packageRules": [
     {
       "matchPackageNames": [

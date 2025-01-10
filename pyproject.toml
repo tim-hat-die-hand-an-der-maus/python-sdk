@@ -1,3 +1,6 @@
+[project]
+requires-python = ">=3.11, <3.14"
+
 [tool.poetry]
 name = "timhatdiehandandermaus-sdk"
 version = "2.0.4"
@@ -35,13 +38,24 @@ tag_format = "v$major.$minor.$patch"
 changelog_incremental = true
 update_changelog_on_bump = true
 
-[tool.ruff]
-extend-select = [
+[tool.ruff.lint]
+select = [
+    "E4",
+    "E7",
+    "E9",
+    "F",
+    "FURB",
+    "G",
     "I001",
+    "LOG",
+    "PTH",
+    "Q",
+    "UP",
 ]
-
-[tool.ruff.isort]
-known-first-party = ["timhatdiehandandermaus_sdk"]
+ignore = [
+    # redundant-open-modes
+    "UP015",
+]
 
 [[tool.mypy.overrides]]
 module = "thefuzz"
