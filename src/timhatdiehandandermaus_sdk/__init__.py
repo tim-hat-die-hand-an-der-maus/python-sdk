@@ -1,5 +1,3 @@
-import os
-
 import httpx
 from httpx import Response
 
@@ -17,18 +15,21 @@ from timhatdiehandandermaus_sdk.models import (
 
 
 class MissingToken(Exception):
-    def __init__(self):
+    def __init__(self) -> None:
         super().__init__("This method needs an authentication token.")
 
 
 class TimApi:
-    base_url = os.getenv("API_URL") or "https://api.timhatdiehandandermaus.consulting"
-
-    def __init__(self, auth_token: str | None = None):
+    def __init__(
+        self,
+        auth_token: str | None = None,
+        *,
+        api_url: str | None = None,
+    ) -> None:
         self._client = httpx.Client(
             timeout=30,
             follow_redirects=True,
-            base_url=self.base_url,
+            base_url=api_url or "https://tim-api.bembel.party",
         )
         if auth_token:
             self._client.headers["Authorization"] = f"Bearer {auth_token}"
