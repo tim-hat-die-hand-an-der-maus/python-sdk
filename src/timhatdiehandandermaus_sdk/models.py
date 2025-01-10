@@ -1,5 +1,4 @@
 from enum import Enum
-from typing import Optional
 
 from pydantic import BaseModel
 
@@ -15,7 +14,7 @@ class MovieMetadataFieldEnum(Enum):
 
 class CoverMetadataResponse(BaseModel):
     url: str
-    ratio: Optional[float]
+    ratio: float | None
 
 
 class MovieStatusResponseEnum(Enum):
@@ -33,8 +32,8 @@ class MovieStatusSearchRequestEnum(Enum):
 class MovieMetadataResponse(BaseModel):
     id: str
     title: str
-    year: Optional[int]
-    rating: Optional[str]
+    year: int | None
+    rating: str | None
     cover: CoverMetadataResponse
 
 
