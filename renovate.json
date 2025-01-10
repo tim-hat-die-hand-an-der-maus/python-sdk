@@ -7,7 +7,7 @@
   "enabled": true,
   "packageRules": [
     {
-      "matchPackageNames": [
+      "matchDepNames": [
         "python"
       ],
       "enabled": false
