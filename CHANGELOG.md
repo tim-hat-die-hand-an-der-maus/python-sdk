@@ -1,3 +1,10 @@
+## v3.0.0 (2025-01-10)
+
+### Feat
+
+- Update to Poetry 2
+- Update a bunch of deps
+
 ## v2.0.4 (2024-01-25)
 
 ### Fix
