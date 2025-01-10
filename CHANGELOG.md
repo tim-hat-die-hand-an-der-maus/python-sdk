@@ -1,3 +1,9 @@
+## v3.1.0 (2025-01-10)
+
+### Feat
+
+- Allow base URL customization
+
 ## v3.0.1 (2025-01-10)
 
 ### Fix
