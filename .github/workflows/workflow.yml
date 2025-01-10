@@ -40,6 +40,16 @@ jobs:
     secrets:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
+  all-checks:
+    runs-on: ubuntu-24.04
+    if: github.event_name == 'pull_request'
+    needs:
+      - test
+      - lint
+      - check-commits
+    steps:
+      - run: echo "All checks done"
+
   bump:
     uses: BlindfoldedSurgery/actions-releases/.github/workflows/commitizen-bump.yml@v4
     if: false
