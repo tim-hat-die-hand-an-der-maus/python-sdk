@@ -1,5 +1,4 @@
 import httpx
-from httpx import Response
 
 from timhatdiehandandermaus_sdk import fuzzy
 from timhatdiehandandermaus_sdk.models import (
@@ -181,8 +180,11 @@ class TimApi:
         return MovieResponse.model_validate(response.json())
 
     def patch_metadata(
-        self, *, movie_id: str, fields: list[MovieMetadataFieldEnum]
-    ) -> Response:
+        self,
+        *,
+        movie_id: str,
+        fields: list[MovieMetadataFieldEnum],
+    ) -> httpx.Response:
         """
         Patches a list of metadata fields (e.g. cover URL + rating if `fields=[MovieMetadataFieldEnum.COVER]`)
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/patch_movie__id__metadata
