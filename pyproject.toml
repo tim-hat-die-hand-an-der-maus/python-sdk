@@ -10,16 +10,17 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
 ]
 
+dependencies = [
+    "httpx ==0.28.*",
+    "pydantic ==2.10.*",
+    "thefuzz ==0.22.*",
+]
+
 [tool.poetry]
 packages = [{ include = "timhatdiehandandermaus_sdk", from = "src" }]
 
 [projects.urls]
 repository = "https://github.com/tim-hat-die-hand-an-der-maus/python-sdk"
-
-[tool.poetry.dependencies]
-httpx = "==0.28.*"
-pydantic = "==2.10.*"
-thefuzz = "==0.22.*"
 
 [tool.poetry.group.dev.dependencies]
 commitizen = "==4.1.0"
