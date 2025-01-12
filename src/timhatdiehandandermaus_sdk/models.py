@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 from timhatdiehandandermaus_sdk.utils import escape_markdown
 
-# see https://api.timhatdiehandandermaus.consulting/docs/swagger/ for api models
+# see https://tim-api.bembel.party/docs/swagger/ for api models
 
 
 class MovieMetadataFieldEnum(Enum):
