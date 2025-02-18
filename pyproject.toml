@@ -23,7 +23,7 @@ packages = [{ include = "timhatdiehandandermaus_sdk", from = "src" }]
 repository = "https://github.com/tim-hat-die-hand-an-der-maus/python-sdk"
 
 [tool.poetry.group.dev.dependencies]
-commitizen = "==4.2.1"
+commitizen = "==4.2.2"
 mypy = "==1.15.*"
 pre-commit = ">=4, <5"
 pytest = ">8, <9"
