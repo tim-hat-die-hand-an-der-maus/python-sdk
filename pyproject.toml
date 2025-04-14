@@ -27,7 +27,7 @@ commitizen = "==4.6.0"
 mypy = "==1.15.*"
 pre-commit = ">=4, <5"
 pytest = ">8, <9"
-ruff = "==0.9.10"
+ruff = "==0.11.5"
 
 [build-system]
 requires = ["poetry-core"]
