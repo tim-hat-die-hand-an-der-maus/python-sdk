@@ -1,3 +1,9 @@
+## v3.1.1 (2025-04-16)
+
+### Fix
+
+- **deps**: update dependency pydantic to ==2.11.*
+
 ## v3.1.0 (2025-01-10)
 
 ### Feat
