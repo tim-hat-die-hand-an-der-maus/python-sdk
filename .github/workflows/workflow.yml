@@ -13,7 +13,7 @@ jobs:
   check-commits:
     uses: BlindfoldedSurgery/actions-releases/.github/workflows/commitizen-check.yml@v4
     with:
-      build-tool: poetry
+      build-tool: uv
       python-version: '3.13'
 
   lint:
@@ -23,7 +23,7 @@ jobs:
         pyversion: [ "3.11", "3.12", "3.13" ]
     uses: BlindfoldedSurgery/actions-python/.github/workflows/lint.yml@v5
     with:
-      build-tool: poetry
+      build-tool: uv
       python-version: ${{ matrix.pyversion }}
 
   test:
@@ -33,7 +33,7 @@ jobs:
         pyversion: [ "3.11", "3.12", "3.13" ]
     uses: BlindfoldedSurgery/actions-python/.github/workflows/test.yml@v5
     with:
-      build-tool: poetry
+      build-tool: uv
       python-version: ${{ matrix.pyversion }}
 
   all-checks:
@@ -54,7 +54,7 @@ jobs:
     secrets:
       GH_TOKEN: ${{ secrets.GH_PR_TOKEN }}
     with:
-      build-tool: poetry
+      build-tool: uv
       python-version: '3.13'
 
   publish_package:
@@ -64,7 +64,7 @@ jobs:
       - test
     if: success() && startsWith(github.ref, 'refs/tags/v')
     with:
-      build-tool: poetry
+      build-tool: uv
       python-version: '3.11'
       pypi-username: ${{ vars.PYPI_USERNAME }}
     secrets:
