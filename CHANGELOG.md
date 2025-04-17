@@ -1,3 +1,9 @@
+## v3.3.0 (2025-04-17)
+
+### Feat
+
+- mark info page URL as required
+
 ## v3.2.0 (2025-04-17)
 
 ### Feat
