@@ -36,7 +36,7 @@ class MovieMetadataResponse(BaseModel):
     year: int | None
     rating: str | None
     cover: CoverMetadataResponse
-    info_page_url: Annotated[str | None, Field(serialization_alias="infoPageUrl")]
+    info_page_url: Annotated[str, Field(serialization_alias="infoPageUrl")]
 
 
 class MovieResponse(BaseModel):
@@ -45,9 +45,7 @@ class MovieResponse(BaseModel):
     imdb: MovieMetadataResponse
 
     def telegram_markdown_v2(self) -> str:
-        imdb_link = (
-            self.imdb.info_page_url or f"https://www.imdb.com/title/tt{self.imdb.id}"
-        )
+        imdb_link = self.imdb.info_page_url
         title_link = f"[{escape_markdown(self.imdb.title)}]({imdb_link})"
 
         year_rating_suffix = escape_markdown(f"({self.imdb.year}) {self.imdb.rating}⭐")
