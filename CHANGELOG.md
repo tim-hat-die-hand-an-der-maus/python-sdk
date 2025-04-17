@@ -1,3 +1,9 @@
+## v3.2.0 (2025-04-17)
+
+### Feat
+
+- use infoPageUrl if available
+
 ## v3.1.1 (2025-04-16)
 
 ### Fix
