@@ -1,11 +1,18 @@
 from enum import Enum
-from typing import Annotated
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict
+from pydantic.alias_generators import to_camel
 
 from timhatdiehandandermaus_sdk.utils import escape_markdown
 
 # see https://tim-api.bembel.party/docs/swagger/ for api models
+
+
+class ResponseModel(BaseModel):
+    model_config = ConfigDict(
+        alias_generator=to_camel,
+        frozen=True,
+    )
 
 
 class MovieMetadataFieldEnum(Enum):
@@ -13,7 +20,7 @@ class MovieMetadataFieldEnum(Enum):
     RATING = "rating"
 
 
-class CoverMetadataResponse(BaseModel):
+class CoverMetadataResponse(ResponseModel):
     url: str
     ratio: float | None
 
@@ -30,16 +37,16 @@ class MovieStatusSearchRequestEnum(Enum):
     DELETED = "Deleted"
 
 
-class MovieMetadataResponse(BaseModel):
+class MovieMetadataResponse(ResponseModel):
     id: str
     title: str
     year: int | None
     rating: str | None
-    cover: CoverMetadataResponse
-    info_page_url: Annotated[str, Field(serialization_alias="infoPageUrl")]
+    cover: CoverMetadataResponse | None
+    info_page_url: str
 
 
-class MovieResponse(BaseModel):
+class MovieResponse(ResponseModel):
     id: str
     status: MovieStatusResponseEnum
     imdb: MovieMetadataResponse
@@ -52,11 +59,11 @@ class MovieResponse(BaseModel):
         return f"{title_link} {year_rating_suffix}"
 
 
-class MoviesResponse(BaseModel):
+class MoviesResponse(ResponseModel):
     movies: list[MovieResponse]
 
 
-class QueueItemResponse(BaseModel):
+class QueueItemResponse(ResponseModel):
     id: str
 
 
