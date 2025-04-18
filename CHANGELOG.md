@@ -1,3 +1,9 @@
+## v3.3.1 (2025-04-18)
+
+### Fix
+
+- handle camelcase aliases
+
 ## v3.3.0 (2025-04-17)
 
 ### Feat
