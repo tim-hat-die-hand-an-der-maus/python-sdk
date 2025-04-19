@@ -50,6 +50,7 @@ class MovieResponse(ResponseModel):
     id: str
     status: MovieStatusResponseEnum
     imdb: MovieMetadataResponse
+    tmdb: MovieMetadataResponse | None
 
     def telegram_markdown_v2(self) -> str:
         imdb_link = self.imdb.info_page_url
