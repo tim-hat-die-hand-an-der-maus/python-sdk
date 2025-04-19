@@ -1,3 +1,9 @@
+## v3.5.1 (2025-04-19)
+
+### Fix
+
+- escape parens in markdown
+
 ## v3.5.0 (2025-04-19)
 
 ### Feat
