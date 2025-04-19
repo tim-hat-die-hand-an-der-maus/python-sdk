@@ -1,3 +1,9 @@
+## v3.4.0 (2025-04-19)
+
+### Feat
+
+- include tmdb in movie response
+
 ## v3.3.1 (2025-04-18)
 
 ### Fix
