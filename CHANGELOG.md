@@ -1,3 +1,9 @@
+## v3.5.0 (2025-04-19)
+
+### Feat
+
+- show and prefer TMDB metadata in markdown
+
 ## v3.4.0 (2025-04-19)
 
 ### Feat
