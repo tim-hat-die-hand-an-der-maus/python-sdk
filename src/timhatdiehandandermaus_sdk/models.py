@@ -75,7 +75,7 @@ class MovieResponse(ResponseModel):
 
         year_suffix = "" if year is None else escape_markdown(f" ({year})")
 
-        return f"{title}{year_suffix} - {', '.join(links)}"
+        return rf"{title}{year_suffix} \- {', '.join(links)}"
 
 
 class MoviesResponse(ResponseModel):
