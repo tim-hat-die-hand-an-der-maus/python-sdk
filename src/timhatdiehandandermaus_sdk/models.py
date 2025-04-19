@@ -53,11 +53,29 @@ class MovieResponse(ResponseModel):
     tmdb: MovieMetadataResponse | None
 
     def telegram_markdown_v2(self) -> str:
-        imdb_link = self.imdb.info_page_url
-        title_link = f"[{escape_markdown(self.imdb.title)}]({imdb_link})"
+        links = []
 
-        year_rating_suffix = escape_markdown(f"({self.imdb.year}) {self.imdb.rating}⭐")
-        return f"{title_link} {year_rating_suffix}"
+        if tmdb := self.tmdb:
+            if rating := tmdb.rating:
+                text = f"TMDB {rating}⭐"
+            else:
+                text = "TMDB"
+            links.append(f"[{text}]({tmdb.info_page_url})")
+
+        if imdb := self.imdb:
+            if rating := imdb.rating:
+                text = f"IMDb {rating}⭐"
+            else:
+                text = "IMDb"
+            links.append(f"[{text}]({imdb.info_page_url})")
+
+        meta = self.tmdb or self.imdb
+        title = escape_markdown(meta.title)
+        year = meta.year
+
+        year_suffix = "" if year is None else f" ({year})"
+
+        return f"{title}{year_suffix} - {', '.join(links)}"
 
 
 class MoviesResponse(ResponseModel):
