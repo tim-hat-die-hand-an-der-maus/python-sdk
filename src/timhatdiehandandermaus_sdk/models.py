@@ -67,7 +67,7 @@ class MovieResponse(ResponseModel):
                 text = f"IMDb {rating}⭐"
             else:
                 text = "IMDb"
-            links.append(f"[{text}]({imdb.info_page_url})")
+            links.append(f"[{escape_markdown(text)}]({imdb.info_page_url})")
 
         meta = self.tmdb or self.imdb
         title = escape_markdown(meta.title)
