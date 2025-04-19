@@ -1,3 +1,9 @@
+## v3.5.3 (2025-04-19)
+
+### Fix
+
+- escape dots in markdown
+
 ## v3.5.2 (2025-04-19)
 
 ### Fix
