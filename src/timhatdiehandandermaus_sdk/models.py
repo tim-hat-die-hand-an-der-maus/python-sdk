@@ -73,7 +73,7 @@ class MovieResponse(ResponseModel):
         title = escape_markdown(meta.title)
         year = meta.year
 
-        year_suffix = "" if year is None else f" ({year})"
+        year_suffix = "" if year is None else escape_markdown(f" ({year})")
 
         return f"{title}{year_suffix} - {', '.join(links)}"
 
