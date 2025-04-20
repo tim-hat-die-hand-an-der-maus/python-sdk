@@ -9,8 +9,8 @@ def fuzzy_search_movie(
     matches = []
     for movie in movies:
         if (
-            fuzz.token_set_ratio(title, movie.imdb.title) > threshold
-            or title.lower() in movie.imdb.title.lower()
+            fuzz.token_set_ratio(title, movie.metadata.title) > threshold
+            or title.lower() in movie.metadata.title.lower()
         ):
             matches.append(movie)
 
