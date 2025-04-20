@@ -49,8 +49,15 @@ class MovieMetadataResponse(ResponseModel):
 class MovieResponse(ResponseModel):
     id: str
     status: MovieStatusResponseEnum
-    imdb: MovieMetadataResponse
+    imdb: MovieMetadataResponse | None
     tmdb: MovieMetadataResponse | None
+
+    @property
+    def metadata(self) -> MovieMetadataResponse:
+        result = self.tmdb or self.imdb
+        if result is None:
+            raise ValueError("Movie has no metadata")
+        return result
 
     def telegram_markdown_v2(self) -> str:
         links = []
@@ -69,7 +76,7 @@ class MovieResponse(ResponseModel):
                 text = "IMDb"
             links.append(f"[{text}]({imdb.info_page_url})")
 
-        meta = self.tmdb or self.imdb
+        meta = self.metadata
         title = escape_markdown(meta.title)
         year = meta.year
 
