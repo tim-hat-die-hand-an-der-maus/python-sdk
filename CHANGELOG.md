@@ -1,3 +1,13 @@
+## v4.0.0 (2025-04-20)
+
+### Feat
+
+- make MovieResponse.imdb optional
+
+### Fix
+
+- use preferred metadata in fuzzy_search_movie
+
 ## v3.5.4 (2025-04-19)
 
 ### Fix
