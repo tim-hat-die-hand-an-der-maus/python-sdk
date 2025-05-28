@@ -1,3 +1,5 @@
+from uuid import UUID
+
 import httpx
 
 from timhatdiehandandermaus_sdk import fuzzy
@@ -50,8 +52,7 @@ class TimApi:
         :param movie_id: string with a movie ID
         :return: MovieResponse
         """
-        path = f"movie/{movie_id}"
-        response = self._client.get(path)
+        response = self._client.get(f"/movie/{movie_id}")
         response.raise_for_status()
 
         return MovieResponse.model_validate(response.json())
@@ -75,7 +76,7 @@ class TimApi:
         if status:
             params["status"] = status.value
 
-        response = self._client.get("movie", params=params)
+        response = self._client.get("/movie", params=params)
         response.raise_for_status()
 
         return MoviesResponse.model_validate(response.json())
@@ -106,7 +107,7 @@ class TimApi:
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Queue%20Resource/get_queue
         :return: QueueResponse
         """
-        response = self._client.get("queue")
+        response = self._client.get("/queue")
         response.raise_for_status()
 
         return QueueResponse.model_validate(response.json())
@@ -131,9 +132,8 @@ class TimApi:
 
         self._check_token()
 
-        path = f"queue/{queue_id}"
         response = self._client.delete(
-            path,
+            f"/queue/{queue_id}",
             params={
                 "status": status.value,
             },
@@ -164,7 +164,12 @@ class TimApi:
             queue_id=queue_id, status=MovieDeleteStatusEnum.WATCHED
         )
 
-    def add_movie(self, *, imdb_url: str) -> MovieResponse:
+    def add_movie(
+        self,
+        *,
+        imdb_url: str,
+        user_id: UUID | None = None,
+    ) -> MovieResponse:
         """
         Adds a movie to the database (and queue) by `imdb_url`
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/put_movie
@@ -173,8 +178,8 @@ class TimApi:
         """
         self._check_token()
 
-        body = MoviePostRequest.model_validate({"imdbUrl": imdb_url})
-        response = self._client.put("movie", json=body.model_dump())
+        body = MoviePostRequest(imdb_url=imdb_url, user_id=user_id)
+        response = self._client.put("/movie", json=body.model_dump(mode="json"))
         response.raise_for_status()
 
         return MovieResponse.model_validate(response.json())
@@ -199,8 +204,10 @@ class TimApi:
 
         self._check_token()
 
-        path = f"movie/{movie_id}/metadata"
-        body = MovieMetadataPatchRequest.model_validate({"refresh": fields})
-        response = self._client.patch(path, json=body.model_dump())
+        body = MovieMetadataPatchRequest(refresh=fields)
+        response = self._client.patch(
+            f"/movie/{movie_id}/metadata",
+            json=body.model_dump(mode="json"),
+        )
         response.raise_for_status()
         return response
