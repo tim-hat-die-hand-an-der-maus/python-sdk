@@ -119,3 +119,14 @@ class MoviePostRequest(RequestModel):
 
 class MovieMetadataPatchRequest(RequestModel):
     refresh: list[MovieMetadataFieldEnum]
+
+
+class CanonicalUserResponse(ResponseModel):
+    id: UUID
+    displayName: str
+
+
+class TelegramUserRequest(RequestModel):
+    id: int
+    first_name: str
+    last_name: str | None

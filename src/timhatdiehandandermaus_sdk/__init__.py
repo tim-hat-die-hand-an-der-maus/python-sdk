@@ -4,6 +4,7 @@ import httpx
 
 from timhatdiehandandermaus_sdk import fuzzy
 from timhatdiehandandermaus_sdk.models import (
+    CanonicalUserResponse,
     MovieDeleteStatusEnum,
     MovieMetadataFieldEnum,
     MovieMetadataPatchRequest,
@@ -211,3 +212,12 @@ class TimApi:
         )
         response.raise_for_status()
         return response
+
+    def get_canonical_user(self, *, user_id: UUID) -> CanonicalUserResponse | None:
+        self._check_token()
+
+        response = self._client.get(f"/user/{user_id}")
+        if response.status_code == 404:
+            return None
+        response.raise_for_status()
+        return CanonicalUserResponse.model_validate_json(response.content)
