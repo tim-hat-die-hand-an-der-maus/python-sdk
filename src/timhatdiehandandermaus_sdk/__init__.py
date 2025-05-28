@@ -209,3 +209,6 @@ class TimApi:
         response.raise_for_status()
 
         return CanonicalUserResponse.model_validate_json(response.content)
+
+    async def close(self) -> None:
+        await self._client.aclose()
