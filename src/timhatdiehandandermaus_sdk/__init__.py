@@ -6,8 +6,6 @@ from timhatdiehandandermaus_sdk import fuzzy
 from timhatdiehandandermaus_sdk.models import (
     CanonicalUserResponse,
     MovieDeleteStatusEnum,
-    MovieMetadataFieldEnum,
-    MovieMetadataPatchRequest,
     MoviePostRequest,
     MovieResponse,
     MoviesResponse,
@@ -184,34 +182,6 @@ class TimApi:
         response.raise_for_status()
 
         return MovieResponse.model_validate(response.json())
-
-    def patch_metadata(
-        self,
-        *,
-        movie_id: str,
-        fields: list[MovieMetadataFieldEnum],
-    ) -> httpx.Response:
-        """
-        Patches a list of metadata fields (e.g. cover URL + rating if `fields=[MovieMetadataFieldEnum.COVER]`)
-        See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/patch_movie__id__metadata
-        :param movie_id: valid movie UUID to be patched (doesn't need to be in the queue)
-        :param fields: list of metadata fields to refresh (see MovieMetadataFieldEnum for options)
-        :return: Nothing, api returns a 204
-        """
-        if not fields:
-            raise ValueError(
-                "`fields` must contain at least one `MovieMetadataFieldEnum` value"
-            )
-
-        self._check_token()
-
-        body = MovieMetadataPatchRequest(refresh=fields)
-        response = self._client.patch(
-            f"/movie/{movie_id}/metadata",
-            json=body.model_dump(mode="json"),
-        )
-        response.raise_for_status()
-        return response
 
     def get_canonical_user(self, *, user_id: UUID) -> CanonicalUserResponse | None:
         self._check_token()

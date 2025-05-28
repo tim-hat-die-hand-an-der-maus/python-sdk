@@ -24,11 +24,6 @@ class RequestModel(ABC, BaseModel):
     )
 
 
-class MovieMetadataFieldEnum(Enum):
-    COVER = "cover"
-    RATING = "rating"
-
-
 class CoverMetadataResponse(ResponseModel):
     url: str
     ratio: float | None
@@ -115,10 +110,6 @@ class MovieDeleteStatusEnum(Enum):
 class MoviePostRequest(RequestModel):
     imdb_url: str
     user_id: UUID | None = None
-
-
-class MovieMetadataPatchRequest(RequestModel):
-    refresh: list[MovieMetadataFieldEnum]
 
 
 class CanonicalUserResponse(ResponseModel):
