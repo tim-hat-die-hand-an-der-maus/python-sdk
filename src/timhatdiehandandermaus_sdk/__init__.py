@@ -55,7 +55,7 @@ class TimApi:
         response = self._client.get(f"/movie/{movie_id}")
         response.raise_for_status()
 
-        return MovieResponse.model_validate(response.json())
+        return MovieResponse.model_validate_json(response.content)
 
     def search_movie(
         self,
@@ -79,7 +79,7 @@ class TimApi:
         response = self._client.get("/movie", params=params)
         response.raise_for_status()
 
-        return MoviesResponse.model_validate(response.json())
+        return MoviesResponse.model_validate_json(response.content)
 
     def fuzzy_search_movie(
         self,
@@ -110,7 +110,7 @@ class TimApi:
         response = self._client.get("/queue")
         response.raise_for_status()
 
-        return QueueResponse.model_validate(response.json())
+        return QueueResponse.model_validate_json(response.content)
 
     def queued_movies(self, *, limit: int | None = None) -> list[MovieResponse]:
         queue_items = self.queue().queue
@@ -140,7 +140,7 @@ class TimApi:
         )
         response.raise_for_status()
 
-        return MovieResponse.model_validate(response.json())
+        return MovieResponse.model_validate_json(response.content)
 
     def mark_movie_as_deleted(self, *, queue_id: str) -> MovieResponse:
         """
@@ -182,7 +182,7 @@ class TimApi:
         response = self._client.put("/movie", json=body.model_dump(mode="json"))
         response.raise_for_status()
 
-        return MovieResponse.model_validate(response.json())
+        return MovieResponse.model_validate_json(response.content)
 
     def get_canonical_user(self, *, user_id: UUID) -> CanonicalUserResponse | None:
         self._check_token()
