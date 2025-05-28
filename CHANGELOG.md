@@ -1,3 +1,25 @@
+## v5.0.0 (2025-05-28)
+
+### BREAKING CHANGE
+
+- removed discontinued metadata update method
+- Naming of request model properties now follows Python
+conventions. They are serialized as camelCase, but should be populated
+by their snake_case name.
+
+### Feat
+
+- allow updating/creating telegram users in API
+- add get_canonical_user method
+- allow passing user ID for queue items
+
+### Perf
+
+- use Pydantic to deserialize json
+
+
+- remove metadata update method
+
 ## v4.0.0 (2025-04-20)
 
 ### Feat
