@@ -95,7 +95,7 @@ class TimApi:
         :param query: queries movies by name (fuzzy search), no value will return all movies (except for status filter)
         :param status: returns movies with given status only
         :param threshold: threshold for the fuzzy search to match on
-        :return: MoviesResponse
+        :return: list[MoviesResponse]
         """
         movies = (await self.search_movie(query=query, status=status)).movies
         title = "" if query is None else query
