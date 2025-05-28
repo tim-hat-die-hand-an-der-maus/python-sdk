@@ -1,3 +1,10 @@
+## v6.0.0 (2025-05-28)
+
+### Feat
+
+- add close method to release client resources
+- migrate client to asyncio
+
 ## v5.0.0 (2025-05-28)
 
 ### BREAKING CHANGE

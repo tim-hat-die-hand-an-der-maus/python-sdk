@@ -1,7 +1,7 @@
 [project]
 requires-python = ">=3.11, <3.14"
 name = "timhatdiehandandermaus-sdk"
-version = "5.0.0"
+version = "6.0.0"
 description = "SDK for the timhatdiehandandermaus API"
 authors = [{ name = "BlindfoldedSurgery", email = "team@blindfolded.surgery" }]
 readme = "README.md"
