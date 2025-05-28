@@ -1,3 +1,4 @@
+import asyncio
 from uuid import UUID
 
 import httpx
@@ -27,7 +28,7 @@ class TimApi:
         *,
         api_url: str | None = None,
     ) -> None:
-        self._client = httpx.Client(
+        self._client = httpx.AsyncClient(
             timeout=30,
             follow_redirects=True,
             base_url=api_url or "https://tim-api.bembel.party",
@@ -45,19 +46,19 @@ class TimApi:
         if not self.has_token:
             raise MissingToken()
 
-    def get_movie(self, *, movie_id: str) -> MovieResponse:
+    async def get_movie(self, *, movie_id: str) -> MovieResponse:
         """
         Gets a movie by id
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Movie%20Resource/get_movie__id_
         :param movie_id: string with a movie ID
         :return: MovieResponse
         """
-        response = self._client.get(f"/movie/{movie_id}")
+        response = await self._client.get(f"/movie/{movie_id}")
         response.raise_for_status()
 
         return MovieResponse.model_validate_json(response.content)
 
-    def search_movie(
+    async def search_movie(
         self,
         *,
         query: str | None = None,
@@ -76,12 +77,12 @@ class TimApi:
         if status:
             params["status"] = status.value
 
-        response = self._client.get("/movie", params=params)
+        response = await self._client.get("/movie", params=params)
         response.raise_for_status()
 
         return MoviesResponse.model_validate_json(response.content)
 
-    def fuzzy_search_movie(
+    async def fuzzy_search_movie(
         self,
         *,
         query: str | None = None,
@@ -96,43 +97,44 @@ class TimApi:
         :param threshold: threshold for the fuzzy search to match on
         :return: MoviesResponse
         """
-        movies = self.search_movie(query=query, status=status).movies
+        movies = (await self.search_movie(query=query, status=status)).movies
         title = "" if query is None else query
 
         return fuzzy.fuzzy_search_movie(movies, title=title, threshold=threshold)
 
-    def queue(self) -> QueueResponse:
+    async def queue(self) -> QueueResponse:
         """
         Retrieves queue, returns a list of `QueueResponseItem` (movie IDs only)
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Queue%20Resource/get_queue
         :return: QueueResponse
         """
-        response = self._client.get("/queue")
+        response = await self._client.get("/queue")
         response.raise_for_status()
 
         return QueueResponse.model_validate_json(response.content)
 
-    def queued_movies(self, *, limit: int | None = None) -> list[MovieResponse]:
-        queue_items = self.queue().queue
+    async def queued_movies(self, *, limit: int | None = None) -> list[MovieResponse]:
+        queue_items = (await self.queue()).queue
         if limit:
             queue_items = queue_items[:limit]
-        movies = []
 
-        for queue_item in queue_items:
-            movies.append(self.get_movie(movie_id=queue_item.id))
+        movie_tasks: list[asyncio.Task[MovieResponse]] = []
+        async with asyncio.TaskGroup() as tg:
+            for queue_item in queue_items:
+                task = tg.create_task(self.get_movie(movie_id=queue_item.id))
+                movie_tasks.append(task)
 
-        # noinspection PyTypeChecker
-        return [movie for movie in movies]
+        return [task.result() for task in movie_tasks]
 
-    def _mark_queued_movie(
+    async def _mark_queued_movie(
         self, *, queue_id: str, status: MovieDeleteStatusEnum
     ) -> MovieResponse:
         if queue_id == "f388de4e-184e-4258-a0b5-10ad753c1ece":
-            return self.get_movie(movie_id=queue_id)
+            return await self.get_movie(movie_id=queue_id)
 
         self._check_token()
 
-        response = self._client.delete(
+        response = await self._client.delete(
             f"/queue/{queue_id}",
             params={
                 "status": status.value,
@@ -142,29 +144,29 @@ class TimApi:
 
         return MovieResponse.model_validate_json(response.content)
 
-    def mark_movie_as_deleted(self, *, queue_id: str) -> MovieResponse:
+    async def mark_movie_as_deleted(self, *, queue_id: str) -> MovieResponse:
         """
         Marks a movie from the queue as deleted (by `queue_id`)
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Queue%20Resource/delete_queue__id_
         :param queue_id: ID of the queue item (not the movie)
         :return: MovieResponse
         """
-        return self._mark_queued_movie(
+        return await self._mark_queued_movie(
             queue_id=queue_id, status=MovieDeleteStatusEnum.DELETED
         )
 
-    def mark_movie_as_watched(self, *, queue_id: str) -> MovieResponse:
+    async def mark_movie_as_watched(self, *, queue_id: str) -> MovieResponse:
         """
         Marks a movie from the queue as watched (by `queue_id`)
         See https://api.timhatdiehandandermaus.consulting/docs/swagger/#/Queue%20Resource/delete_queue__id_
         :param queue_id: ID of the queue item (not the movie)
         :return: MovieResponse
         """
-        return self._mark_queued_movie(
+        return await self._mark_queued_movie(
             queue_id=queue_id, status=MovieDeleteStatusEnum.WATCHED
         )
 
-    def add_movie(
+    async def add_movie(
         self,
         *,
         imdb_url: str,
@@ -179,26 +181,28 @@ class TimApi:
         self._check_token()
 
         body = MoviePostRequest(imdb_url=imdb_url, user_id=user_id)
-        response = self._client.put("/movie", json=body.model_dump(mode="json"))
+        response = await self._client.put("/movie", json=body.model_dump(mode="json"))
         response.raise_for_status()
 
         return MovieResponse.model_validate_json(response.content)
 
-    def get_canonical_user(self, *, user_id: UUID) -> CanonicalUserResponse | None:
+    async def get_canonical_user(
+        self, *, user_id: UUID
+    ) -> CanonicalUserResponse | None:
         self._check_token()
 
-        response = self._client.get(f"/user/{user_id}")
+        response = await self._client.get(f"/user/{user_id}")
         if response.status_code == 404:
             return None
         response.raise_for_status()
         return CanonicalUserResponse.model_validate_json(response.content)
 
-    def update_telegram_user(
+    async def update_telegram_user(
         self, telegram_user: TelegramUserRequest
     ) -> CanonicalUserResponse:
         self._check_token()
 
-        response = self._client.put(
+        response = await self._client.put(
             "/user/telegram",
             json=telegram_user.model_dump(mode="json"),
         )
