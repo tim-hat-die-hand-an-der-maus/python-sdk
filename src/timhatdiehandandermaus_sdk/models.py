@@ -1,4 +1,6 @@
+from abc import ABC
 from enum import Enum
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
 from pydantic.alias_generators import to_camel
@@ -8,10 +10,17 @@ from timhatdiehandandermaus_sdk.utils import escape_markdown
 # see https://tim-api.bembel.party/docs/swagger/ for api models
 
 
-class ResponseModel(BaseModel):
+class ResponseModel(ABC, BaseModel):
     model_config = ConfigDict(
         alias_generator=to_camel,
         frozen=True,
+    )
+
+
+class RequestModel(ABC, BaseModel):
+    model_config = ConfigDict(
+        populate_by_name=True,
+        alias_generator=to_camel,
     )
 
 
@@ -91,9 +100,10 @@ class MoviesResponse(ResponseModel):
 
 class QueueItemResponse(ResponseModel):
     id: str
+    user_id: UUID | None
 
 
-class QueueResponse(BaseModel):
+class QueueResponse(ResponseModel):
     queue: list[QueueItemResponse]
 
 
@@ -102,9 +112,10 @@ class MovieDeleteStatusEnum(Enum):
     WATCHED = "Watched"
 
 
-class MoviePostRequest(BaseModel):
-    imdbUrl: str
+class MoviePostRequest(RequestModel):
+    imdb_url: str
+    user_id: UUID | None = None
 
 
-class MovieMetadataPatchRequest(BaseModel):
+class MovieMetadataPatchRequest(RequestModel):
     refresh: list[MovieMetadataFieldEnum]
