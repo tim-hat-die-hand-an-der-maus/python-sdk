@@ -11,6 +11,7 @@ from timhatdiehandandermaus_sdk.models import (
     MoviesResponse,
     MovieStatusSearchRequestEnum,
     QueueResponse,
+    TelegramUserRequest,
 )
 
 
@@ -190,4 +191,17 @@ class TimApi:
         if response.status_code == 404:
             return None
         response.raise_for_status()
+        return CanonicalUserResponse.model_validate_json(response.content)
+
+    def update_telegram_user(
+        self, telegram_user: TelegramUserRequest
+    ) -> CanonicalUserResponse:
+        self._check_token()
+
+        response = self._client.put(
+            "/user/telegram",
+            json=telegram_user.model_dump(mode="json"),
+        )
+        response.raise_for_status()
+
         return CanonicalUserResponse.model_validate_json(response.content)
