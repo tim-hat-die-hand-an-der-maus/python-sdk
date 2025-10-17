@@ -78,3 +78,6 @@ ignore = [
 [[tool.mypy.overrides]]
 module = "thefuzz"
 ignore_missing_imports = true
+
+[tool.ruff.lint.flake8-type-checking]
+runtime-evaluated-base-classes = ["pydantic.BaseModel"]
