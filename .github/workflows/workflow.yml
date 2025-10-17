@@ -14,13 +14,13 @@ jobs:
     uses: BlindfoldedSurgery/actions-releases/.github/workflows/commitizen-check.yml@v4
     with:
       build-tool: uv
-      python-version: '3.13'
+      python-version: '3.14'
 
   lint:
     strategy:
       fail-fast: false
       matrix:
-        pyversion: [ "3.11", "3.12", "3.13" ]
+        pyversion: [ "3.11", "3.12", "3.13", "3.14" ]
     uses: BlindfoldedSurgery/actions-python/.github/workflows/lint.yml@v5
     with:
       build-tool: uv
@@ -30,7 +30,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        pyversion: [ "3.11", "3.12", "3.13" ]
+        pyversion: [ "3.11", "3.12", "3.13", "3.14" ]
     uses: BlindfoldedSurgery/actions-python/.github/workflows/test.yml@v5
     with:
       build-tool: uv
@@ -62,7 +62,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_PR_TOKEN }}
     with:
       build-tool: uv
-      python-version: '3.13'
+      python-version: '3.14'
 
   publish_package:
     uses: BlindfoldedSurgery/actions-python/.github/workflows/publish-package.yml@v5
