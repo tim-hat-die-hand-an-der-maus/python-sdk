@@ -21,17 +21,24 @@ jobs:
       fail-fast: false
       matrix:
         pyversion: [ "3.11", "3.12", "3.13", "3.14" ]
-    uses: BlindfoldedSurgery/actions-python/.github/workflows/lint.yml@v5
+    uses: BlindfoldedSurgery/actions-python/.github/workflows/lint.yml@v6
     with:
       build-tool: uv
       python-version: ${{ matrix.pyversion }}
+
+  lint-tests:
+    uses: BlindfoldedSurgery/actions-python/.github/workflows/lint.yml@v6
+    with:
+      build-tool: uv
+      context-path: "tests/"
+      python-version: "3.14"
 
   test:
     strategy:
       fail-fast: false
       matrix:
         pyversion: [ "3.11", "3.12", "3.13", "3.14" ]
-    uses: BlindfoldedSurgery/actions-python/.github/workflows/test.yml@v5
+    uses: BlindfoldedSurgery/actions-python/.github/workflows/test.yml@v6
     with:
       build-tool: uv
       python-version: ${{ matrix.pyversion }}
@@ -42,6 +49,7 @@ jobs:
     needs:
       - test
       - lint
+      - lint-tests
       - check-commits
     steps:
       - run: |
@@ -57,6 +65,7 @@ jobs:
     uses: BlindfoldedSurgery/actions-releases/.github/workflows/commitizen-bump.yml@v4
     needs:
       - lint
+      - lint-tests
       - test
     secrets:
       GH_TOKEN: ${{ secrets.GH_PR_TOKEN }}
@@ -65,9 +74,10 @@ jobs:
       python-version: '3.14'
 
   publish_package:
-    uses: BlindfoldedSurgery/actions-python/.github/workflows/publish-package.yml@v5
+    uses: BlindfoldedSurgery/actions-python/.github/workflows/publish-package.yml@v6
     needs:
       - lint
+      - lint-tests
       - test
     if: success() && startsWith(github.ref, 'refs/tags/v')
     with:
