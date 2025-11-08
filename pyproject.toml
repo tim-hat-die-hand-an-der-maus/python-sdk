@@ -83,7 +83,8 @@ runtime-evaluated-base-classes = ["pydantic.BaseModel"]
 module = "thefuzz"
 ignore_missing_imports = true
 
-[tool.pytest.ini_options]
+[tool.pytest]
+strict = true
 addopts = [
     "--import-mode=importlib",
 ]
