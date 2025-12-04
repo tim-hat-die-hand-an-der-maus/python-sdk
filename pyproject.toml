@@ -33,7 +33,7 @@ dev = [
     "mypy ==1.19.*",
     "pre-commit >=4, <5",
     "pytest ==9.0.*",
-    "ruff ==0.14.7",
+    "ruff ==0.14.8",
 ]
 
 [tool.uv.build-backend]
